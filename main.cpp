@@ -41,6 +41,27 @@ class MomentumStrategy : public TradingStrategy
     }
 };
 
+class StrategyFactory
+{
+public:
+    static std::unique_ptr<TradingStrategy>
+    createStrategy(const std::string& strategyName)
+    {
+        if (strategyName == "meanreversion")
+        {
+            return std::make_unique<MeanReversionStrategy>();
+        }
+        else if (strategyName == "momentum")
+        {
+            return std::make_unique<MomentumStrategy>();
+        }
+        else
+        {
+            throw std::invalid_argument("Unknown strategy: " + strategyName);
+        }
+    }
+};
+
 int main()
 {
     try
@@ -49,19 +70,7 @@ int main()
         std::cout << "Enter trading strategy (meanreversion/momentum): ";
         std::cin >> strategyChoice;
 
-        std::unique_ptr<TradingStrategy> strategy;
-        if (strategyChoice == "meanreversion")
-        {
-            strategy = std::make_unique<MeanReversionStrategy>();
-        }
-        else if (strategyChoice == "momentum")
-        {
-            strategy = std::make_unique<MomentumStrategy>();
-        }
-        else
-        {
-            throw std::invalid_argument("Unknown strategy: " + strategyChoice);
-        }
+        auto strategy = StrategyFactory::createStrategy(strategyChoice);
 
         std::vector<double> marketData = { 100.0, 101.0, 102.0,
                                            103.0, 104.0, 105.0 };
