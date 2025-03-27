@@ -1,7 +1,9 @@
+#include <chrono>
 #include <iostream>
 #include <memory>
 #include <random>
 #include <string>
+#include <thread>
 #include <vector>
 
 class TradingStrategy
@@ -63,6 +65,45 @@ public:
     }
 };
 
+class TradingSystem
+{
+private:
+    std::unique_ptr<TradingStrategy> strategy;
+    std::vector<double>              marketData;
+    const int maxMarketDataSize{ 20 };   // Maximum size of market data
+
+public:
+    TradingSystem(std::unique_ptr<TradingStrategy> strat)
+        : strategy(std::move(strat))
+    {}
+
+    void updateMarketData(double price)
+    {
+        marketData.push_back(price);
+        if (marketData.size() > maxMarketDataSize)
+        {
+            marketData.erase(marketData.begin());
+        }
+    }
+
+    std::string executeTrading()
+    {
+        if (marketData.size() < 5)
+            return "HOLD";   // Not enough data
+        return strategy->generateSignal(marketData);
+    }
+
+    void printMarketData() const
+    {
+        std::cout << "Market data: ";
+        for (const auto& data : marketData)
+        {
+            std::cout << data << ' ';
+        }
+        std::cout << std::endl;
+    }
+};
+
 double simulateMarketData()
 {
     static std::random_device               rd;
@@ -80,21 +121,19 @@ int main()
         std::cin >> strategyChoice;
 
         auto strategy = StrategyFactory::createStrategy(strategyChoice);
+        TradingSystem tradingSystem(std::move(strategy));
 
-        std::vector<double> marketData;
-        for (int i = 0; i < 25; ++i)
+        std::cout << "Simulating market data...\n";
+        for (int i{ 0 }; i < 30; ++i)
         {
-            marketData.push_back(simulateMarketData());
+            double marketPrice{ simulateMarketData() };
+            tradingSystem.updateMarketData(marketPrice);
+            tradingSystem.printMarketData();
+            std::string signal = tradingSystem.executeTrading();
+            std::cout << "Trading signal: " << signal << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(500)
+            );   // Simulate time delay
         }
-        std::cout << "Market data: ";
-        for (const auto& data : marketData)
-        {
-            std::cout << data << ' ';
-        }
-        std::cout << "\n\n";
-
-        std::string signal = strategy->generateSignal(marketData);
-        std::cout << "Generated signal: " << signal << '\n';
     }
     catch (const std::exception& e)
     {
