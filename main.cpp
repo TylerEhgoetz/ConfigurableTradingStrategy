@@ -30,18 +30,33 @@ public:
     }
 };
 
+class MomentumStrategy : public TradingStrategy
+{
+    std::string generateSignal(const std::vector<double>& marketData) override
+    {
+        if (marketData.size() < 2)
+            return "HOLD";   // Not enough data
+        return (marketData.back() > marketData[marketData.size() - 2]) ? "BUY"
+                                                                       : "SELL";
+    }
+};
+
 int main()
 {
     try
     {
         std::string strategyChoice;
-        std::cout << "Enter trading strategy (meanreversion): ";
+        std::cout << "Enter trading strategy (meanreversion/momentum): ";
         std::cin >> strategyChoice;
 
         std::unique_ptr<TradingStrategy> strategy;
         if (strategyChoice == "meanreversion")
         {
             strategy = std::make_unique<MeanReversionStrategy>();
+        }
+        else if (strategyChoice == "momentum")
+        {
+            strategy = std::make_unique<MomentumStrategy>();
         }
         else
         {
