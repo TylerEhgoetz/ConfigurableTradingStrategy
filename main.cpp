@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -62,6 +63,14 @@ public:
     }
 };
 
+double simulateMarketData()
+{
+    static std::random_device               rd;
+    static std::mt19937                     gen(rd());
+    static std::uniform_real_distribution<> dis(0.0, 100.0);
+    return dis(gen);
+}
+
 int main()
 {
     try
@@ -72,9 +81,19 @@ int main()
 
         auto strategy = StrategyFactory::createStrategy(strategyChoice);
 
-        std::vector<double> marketData = { 100.0, 101.0, 102.0,
-                                           103.0, 104.0, 105.0 };
-        std::string         signal     = strategy->generateSignal(marketData);
+        std::vector<double> marketData;
+        for (int i = 0; i < 25; ++i)
+        {
+            marketData.push_back(simulateMarketData());
+        }
+        std::cout << "Market data: ";
+        for (const auto& data : marketData)
+        {
+            std::cout << data << ' ';
+        }
+        std::cout << "\n\n";
+
+        std::string signal = strategy->generateSignal(marketData);
         std::cout << "Generated signal: " << signal << '\n';
     }
     catch (const std::exception& e)
