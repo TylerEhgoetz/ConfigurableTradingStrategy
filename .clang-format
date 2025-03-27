@@ -1,0 +1,70 @@
+# options: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+BasedOnStyle: Microsoft
+IndentWidth: 4
+ColumnLimit: 80
+SpaceAfterCStyleCast: true
+UseTab: Never
+AllowShortIfStatementsOnASingleLine: false
+AlignTrailingComments: true
+SpacesBeforeTrailingComments: 3
+# Change to keep return types and function names on the same line
+AlwaysBreakAfterReturnType: None
+AlignConsecutiveMacros: Consecutive
+UseCRLF: false
+BreakConstructorInitializers: BeforeColon
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterStruct: true
+  AfterNamespace: true
+  BeforeCatch: true
+  BeforeElse: true
+  SplitEmptyFunction: false
+  BeforeClosingBrace: true # Ensure closing brace is on its own line
+  BeforeLambdaBody: true
+
+PointerAlignment: Left
+AlignAfterOpenBracket: BlockIndent
+BracedInitializerIndentWidth: 4
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: AcrossEmptyLinesAndComments
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AlignFunctionDeclarations: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: true
+  AlignFunctionPointers: false
+  PadOperators: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseArrows: true
+  AlignCaseColons: true
+
+PackConstructorInitializers: NextLineOnly
+BinPackArguments: false
+BinPackParameters: false
+AlwaysBreakBeforeMultilineStrings: true
+BreakBeforeBinaryOperators: All
+PenaltyBreakAssignment: 1000
+PenaltyBreakBeforeFirstCallParameter: 200
+PenaltyExcessCharacter: 200
+PenaltyReturnTypeOnItsOwnLine: 0
+PenaltyBreakString: 100
+
+Cpp11BracedListStyle: false
+EmptyLineBeforeAccessModifier: LogicalBlock
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+BreakTemplateDeclarations: true
